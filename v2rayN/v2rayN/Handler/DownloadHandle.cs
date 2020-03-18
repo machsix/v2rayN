@@ -278,6 +278,12 @@ namespace v2rayN.Handler
                 Utils.SetSecurityProtocol();
 
                 WebClientEx ws = new WebClientEx();
+                Regex rx = new Regex(@"^(?<protocol>.+?//)(?<username>.+?)(?::(?<password>.+?))?@(?<address>.+)$");
+                Match match = rx.Match(url);
+                if (match.Success)
+                {
+                    ws.Credentials = new NetworkCredential(match.Groups["username"].Value, match.Groups["password"].Value);
+                }
                 ws.DownloadStringCompleted += Ws_DownloadStringCompleted;
                 ws.DownloadStringAsync(new Uri(url));
             }
